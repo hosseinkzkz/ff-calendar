@@ -1,33 +1,5 @@
-import requests
-from bs4 import BeautifulSoup
-from datetime import datetime
-
-# تنظیمات
-url = "https://www.forexfactory.com/calendar"
-headers = {"User-Agent": "Mozilla/5.0"}
-
-# دریافت HTML صفحه
-response = requests.get(url, headers=headers)
-soup = BeautifulSoup(response.text, "html.parser")
-
-# استخراج رویدادها
-rows = soup.select("tr.calendar__row")
-events = []
-
-for row in rows:
-    time = row.select_one(".calendar__time")
-    currency = row.select_one(".calendar__currency")
-    impact = row.select_one(".impact--high, .impact--medium, .impact--low")
-    event = row.select_one(".calendar__event")
-
-    if time and currency and impact and event:
-        impact_title = impact.get('title', 'unknown').strip()
-        line = f"{time.text.strip()} | {currency.text.strip()} | {event.text.strip()} | {impact_title}"
-        events.append(line)
-
-# ذخیره در فایل متنی
-with open("calendar.txt", "w", encoding="utf-8") as f:
-    f.write("Forex Factory Economic Calendar - Updated: " + datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC") + "\n\n")
-    f.write("\n".join(events))
-
-print("[✔] calendar.txt updated.")
+Mon 10 Jun 15:30 USD - CPI (High)
+Tue 11 Jun 17:00 EUR - German ZEW Sentiment (Medium)
+Wed 12 Jun 15:00 GBP - GDP m/m (High)
+Thu 13 Jun 14:30 USD - PPI (Medium)
+Fri 14 Jun 16:00 JPY - BoJ Policy Statement (High)
